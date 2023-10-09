@@ -51,6 +51,7 @@ function App() {
               <Route path="/" exact element={<Trips />} />
               <Route path="/:tripId/memos/:day" exact element={<Memos />} />
               <Route path="/:tripId/memos/:day" exact element={<Memos />} />
+              <Route path="/:tripId/memos/:day" exact element={<Memos />} />
               <Route path="/login" exact element={<Login />} />
               <Route path="/signup" exact element={<Signup />} />
               <Route path="/createtrip" exact element={<Newtrip />} />
