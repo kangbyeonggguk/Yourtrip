@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { AuthContext } from "../../shared/context/auth-context";
@@ -10,6 +10,9 @@ import Menubox from "../../shared/UIElements/Menubox";
 import { VALIDATOR_REQUIRE } from "../../shared/util/validators";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import "./Addmemo.css";
+
+import { useSelector } from "react-redux/es/hooks/useSelector";
+
 const contents = [
   {
     title: "대표 이미지",
@@ -43,7 +46,9 @@ const Addmemo = () => {
   const day = useParams().day;
   const navigate = useNavigate(); // useNavigate hook을 이 컴포넌트 내에서 사용
   const [inputdata, setInputdata] = useState({});
-  const auth = useContext(AuthContext);
+
+  //const auth = useContext(AuthContext);
+  const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
 
   const [addmemo, setaddmemo] = useState(false);
   const [validatecheck, setValidatecheck] = useState({
@@ -65,7 +70,7 @@ const Addmemo = () => {
         "POST",
         formdata,
         {
-          Authorization: "Bearer " + auth.token,
+          Authorization: "Bearer " + tripauth.token,
         }
       );
 

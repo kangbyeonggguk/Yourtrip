@@ -8,12 +8,12 @@ import ErrorModal from "../../shared/UIElements/ErrorModal";
 import Loadingspinner from "../../shared/UIElements/Loadingspinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import { useSelector } from "react-redux";
 
 const Trips = () => {
   const { isLoading, error, sendRequest, clearError, setIsLoading } =
     useHttpClient();
   const [loadedTrips, setLoadedTrips] = useState();
-  const auth = useContext(AuthContext);
 
   useEffect(() => {
     const fetchTrips = async (event) => {

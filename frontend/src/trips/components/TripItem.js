@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Backdrop from "../../shared/UIElements/Backdrop";
@@ -8,9 +8,12 @@ import { Link } from "react-router-dom";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 
+import { useSelector } from "react-redux";
+
 const TripItem = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const auth = useContext(AuthContext);
+  //const auth = useContext(AuthContext); //context를 이용한 상태관리
+  const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
 
   const backgroundImageStyle = {
     backgroundImage: `url(${process.env.REACT_APP_ASSET_URL}${props.img.replace(
@@ -33,7 +36,7 @@ const TripItem = (props) => {
         "DELETE",
         null,
         {
-          Authorization: "Bearer " + auth.token,
+          Authorization: "Bearer " + tripauth.token,
         }
       );
 
@@ -56,7 +59,7 @@ const TripItem = (props) => {
       </Modal>
       <Link to={`/${props.id}/memos/1`}>
         <li className="tripitem" style={backgroundImageStyle}>
-          {auth.userId === props.creatorid && (
+          {tripauth.userId === props.creatorid && (
             <>
               <div
                 className="tripitem-update nodeco"

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import "./Memos.css";
 
-import { AuthContext } from "../../shared/context/auth-context";
 import Modal from "../../shared/UIElements/Modal";
 import Backdrop from "../../shared/UIElements/Backdrop";
 import ErrorModal from "../../shared/UIElements/ErrorModal";
@@ -10,6 +9,7 @@ import Loadingspinner from "../../shared/UIElements/Loadingspinner";
 import Memolist from "../components/Memolist";
 import Card from "../../shared/UIElements/Card";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { useSelector } from "react-redux";
 
 const dummylist = [
   {
@@ -112,7 +112,8 @@ const dummylist = [
 ];
 
 const Memos = () => {
-  const auth = useContext(AuthContext);
+  //const auth = useContext(AuthContext);
+  const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
 
   const tripid = useParams().tripId;
   const day = useParams().day;
@@ -157,7 +158,7 @@ const Memos = () => {
         "POST",
         null,
         {
-          Authorization: "Bearer " + auth.token,
+          Authorization: "Bearer " + tripauth.token,
         }
       );
 
@@ -173,7 +174,7 @@ const Memos = () => {
         "DELETE",
         null,
         {
-          Authorization: "Bearer " + auth.token,
+          Authorization: "Bearer " + tripauth.token,
         }
       );
 
@@ -202,7 +203,7 @@ const Memos = () => {
 
           {parseInt(dayminus) > 0 && ( //페이지에 맞게 방향 모양 출력
             <>
-              {auth.userId === loadedTrip.creator.id && (
+              {tripauth.userId === loadedTrip.creator.id && (
                 <div className="day-delete-btn center" onClick={openDelete}>
                   DAY 삭제
                 </div>
@@ -216,7 +217,7 @@ const Memos = () => {
             {loadedTrip.memo.length != 0 && (
               <Memolist trip={loadedTrip} day={day} />
             )}
-            {auth.userId === loadedTrip.creator.id && (
+            {tripauth.userId === loadedTrip.creator.id && (
               <Link to={`/${tripid}/memos/${day}/addmemo`}>
                 <Card className={"memo-plus-btn"}>
                   <img src="../../../../img/plus.png"></img>
@@ -234,7 +235,7 @@ const Memos = () => {
             </Link>
           )}
           {parseInt(dayplus) > parseInt(loadedTrip.memo.length) &&
-            auth.userId === loadedTrip.creator.id && ( //페이지에 맞게 방향 모양 출력
+            tripauth.userId === loadedTrip.creator.id && ( //페이지에 맞게 방향 모양 출력
               <img
                 className="dayplus"
                 src="../../../../img/dayplus.png"

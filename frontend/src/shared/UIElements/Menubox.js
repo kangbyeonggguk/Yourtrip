@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./Menubox.css";
 import Card from "./Card";
@@ -17,6 +18,7 @@ const Iscontent = (
   const [imgUrl, setImgUrl] = useState();
   const [errortext, setErrortext] = useState("");
   const [textvalue, setTextvalue] = useState(content.existing || "");
+  const navigate = useNavigate(); // useNavigate hook을 이 컴포넌트 내에서 사용
 
   useEffect(() => {
     setTextvalue(content.existing || "");
@@ -84,11 +86,18 @@ const Iscontent = (
   };
   switch (content.type) {
     case "input":
+      let inputtype;
+      if (content.id == "password") {
+        inputtype = "password";
+      } else {
+        inputtype = "text";
+      }
       return (
         <React.Fragment>
           <div>
             <div className={`menubox-contents-title`}>{content.title}</div>
             <input
+              type={inputtype}
               name={content.id}
               className={`menubox-contents-input ${content.className}`}
               value={textvalue}
@@ -125,20 +134,30 @@ const Iscontent = (
       let type;
       if (content.formtype) {
         type = "submit";
+        return (
+          <React.Fragment>
+            <button
+              className={`menubox-contents-btn ${content.className} center`}
+              type={type}
+              disabled={buttondisabled}
+            >
+              {content.title}
+            </button>
+          </React.Fragment>
+        );
       } else {
         type = "button";
-      }
-      return (
-        <React.Fragment>
+        return (
           <button
             className={`menubox-contents-btn ${content.className} center`}
             type={type}
-            disabled={buttondisabled}
+            onClick={() => navigate(`${content.to}`)}
           >
             {content.title}
           </button>
-        </React.Fragment>
-      );
+        );
+      }
+
     case "image":
       return (
         <React.Fragment>

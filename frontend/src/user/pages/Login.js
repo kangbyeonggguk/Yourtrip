@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { AuthContext } from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/UIElements/ErrorModal";
 import Loadingspinner from "../../shared/UIElements/Loadingspinner";
 import Menubox from "../../shared/UIElements/Menubox";
@@ -11,6 +10,10 @@ import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
+
+import { useDispatch } from "react-redux";
+import { reduxlogin } from "../../shared/redux/action/authAction";
+import { useSelector } from "react-redux";
 
 const contents = [
   {
@@ -44,7 +47,8 @@ const Login = () => {
 
   const navigate = useNavigate(); // useNavigate hook을 이 컴포넌트 내에서 사용
   const [inputdata, setInputdata] = useState({});
-  const auth = useContext(AuthContext);
+  //const auth = useContext(AuthContext); //context 사용 로그인 유지
+  const dispatch = useDispatch(); //redux 사용 로그인 유지
 
   const [login, setLogin] = useState(false);
   const [validatecheck, setValidatecheck] = useState({
@@ -67,7 +71,14 @@ const Login = () => {
         }
       );
 
-      auth.login(responseData.userId, responseData.token);
+      //auth.login(responseData.userId, responseData.token); //context사용 로그인 유지
+
+      //redux 사용 로그인 유지
+      const user = {
+        userId: `${responseData.userId}`,
+        token: `${responseData.token}`,
+      };
+      dispatch(reduxlogin(user.userId, user.token));
 
       setLogin(true);
     } catch (err) {}

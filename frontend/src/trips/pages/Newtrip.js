@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { AuthContext } from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/UIElements/ErrorModal";
@@ -10,6 +10,7 @@ import { VALIDATOR_REQUIRE } from "../../shared/util/validators";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
 import "./Newtrip.css";
+import { useSelector } from "react-redux";
 
 const contents = [
   {
@@ -35,7 +36,10 @@ const Newtrip = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const navigate = useNavigate(); // useNavigate hook을 이 컴포넌트 내에서 사용
   const [inputdata, setInputdata] = useState({});
-  const auth = useContext(AuthContext);
+
+  //const auth = useContext(AuthContext);
+  const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
+
   const [newtrip, setnewtrip] = useState(false);
   const [validatecheck, setValidatecheck] = useState({
     title: true,
@@ -55,7 +59,7 @@ const Newtrip = () => {
         "POST",
         formdata,
         {
-          Authorization: "Bearer " + auth.token,
+          Authorization: "Bearer " + tripauth.token,
         }
       );
 

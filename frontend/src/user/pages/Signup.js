@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../shared/context/auth-context";
 
 import Menubox from "../../shared/UIElements/Menubox";
 import "./Signup.css";
@@ -13,6 +12,7 @@ import {
 import Loadingspinner from "../../shared/UIElements/Loadingspinner";
 import ErrorModal from "../../shared/UIElements/ErrorModal";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { useSelector } from "react-redux";
 
 const contents = [
   {
@@ -56,7 +56,6 @@ const Signup = () => {
 
   const navigate = useNavigate(); // useNavigate hook을 이 컴포넌트 내에서 사용
   const [inputdata, setInputdata] = useState({});
-  const auth = useContext(AuthContext);
 
   const [signup, setSignup] = useState(false);
   const [validatecheck, setValidatecheck] = useState({

@@ -8,7 +8,8 @@ import Backdrop from "../../shared/UIElements/Backdrop";
 import "./MemoItem.css";
 import { Link } from "react-router-dom";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
+//import { AuthContext } from "../../shared/context/auth-context";
+import { useSelector } from "react-redux";
 
 const Editurl = (props) => {
   const tripid = useParams().tripId;
@@ -19,7 +20,9 @@ const Editurl = (props) => {
 };
 
 const MemoItem = (props) => {
-  const auth = useContext(AuthContext);
+  //const auth = useContext(AuthContext);//context를 이용한 상태관리
+  const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
+
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const tripid = useParams().tripId;
@@ -49,7 +52,7 @@ const MemoItem = (props) => {
         "DELETE",
         null,
         {
-          Authorization: "Bearer " + auth.token,
+          Authorization: "Bearer " + tripauth.token,
         }
       );
 
@@ -89,7 +92,7 @@ const MemoItem = (props) => {
             <div className="memo-location-btn center" onClick={openMap}>
               지도에서 위치 보기
             </div>
-            {auth.userId === props.userid && (
+            {tripauth.userId === props.userid && (
               <>
                 <div className="center">
                   <Link className="nodeco" to={Editurl(props)}>

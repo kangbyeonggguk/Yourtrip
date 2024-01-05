@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { AuthContext } from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/UIElements/ErrorModal";
@@ -11,12 +11,17 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 
 import "./Newtrip.css";
 
+import { useSelector } from "react-redux";
+
 const EditTrip = () => {
   const tripId = useParams().tripId;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const navigate = useNavigate(); // useNavigate hook을 이 컴포넌트 내에서 사용
   const [inputdata, setInputdata] = useState({});
-  const auth = useContext(AuthContext);
+
+  //const auth = useContext(AuthContext);
+  const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
+
   const [newtrip, setnewtrip] = useState(false);
   const [validatecheck, setValidatecheck] = useState({});
 
@@ -70,7 +75,7 @@ const EditTrip = () => {
 
     const formdata = new FormData();
     formdata.append("title", inputdata.title);
-    formdata.append("creator", auth.userId);
+    formdata.append("creator", tripauth.userId);
     formdata.append("image", inputdata.image);
 
     try {
@@ -79,7 +84,7 @@ const EditTrip = () => {
         "PATCH",
         formdata,
         {
-          Authorization: "Bearer " + auth.token,
+          Authorization: "Bearer " + tripauth.token,
         }
       );
 

@@ -1,14 +1,20 @@
-import React, { useContext } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
 
 import "./NavLinks.css";
 
+import { useDispatch, useSelector } from "react-redux";
+import { reduxlogout } from "../redux/action/authAction";
 const NavLinks = () => {
-  const auth = useContext(AuthContext);
+  //const auth = useContext(AuthContext);//context 사용 시
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
   return (
     <React.Fragment>
-      {auth.isLoggedIn && (
+      {/*context 사용 시 {auth.isLoggedIn&&} 사용*/}
+      {isLoggedIn && (
         <>
           <li>
             <NavLink to="/createtrip" className="otherbtn">
@@ -21,13 +27,20 @@ const NavLinks = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/" className="logoutbtn" onClick={auth.logout}>
+            <NavLink
+              to="/"
+              className="logoutbtn"
+              onClick={() => {
+                //auth.logout();
+                dispatch(reduxlogout());
+              }}
+            >
               로그아웃
             </NavLink>
           </li>
         </>
       )}
-      {!auth.isLoggedIn && (
+      {!isLoggedIn && (
         <>
           <li>
             <NavLink to="/login" className="otherbtn">
