@@ -11,7 +11,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useSelector } from "react-redux";
 
 const TripItem = (props) => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, error, sendRequest } = useHttpClient();
   //const auth = useContext(AuthContext); //context를 이용한 상태관리
   const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
 
@@ -42,50 +42,57 @@ const TripItem = (props) => {
 
       closeDelete();
       window.location.reload();
-    } catch (err) {}
+    } catch (err) {
+      alert("정보 삭제에 실패했습니다.");
+    }
   };
 
   return (
     <React.Fragment>
-      {showDelete && <Backdrop onClick={closeDelete} />}
-      <Modal className="modal" show={showDelete}>
-        <div className="modal-question-delete">
-          여행 기록을 삭제하시겠습니까?
-        </div>
-        <div className="modal-cancel">
-          <button onClick={deletetrip}>예</button>
-          <button onClick={closeDelete}>아니요</button>
-        </div>
-      </Modal>
-      <Link to={`/${props.id}/memos/1`}>
-        <li className="tripitem" style={backgroundImageStyle}>
-          {tripauth.userId === props.creatorid && (
-            <>
-              <div
-                className="tripitem-update nodeco"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate(`/${props.id}/edittrip`);
-                }}
-              >
-                수정
-              </div>
-              <div
-                className="tripitem-delete"
-                onClick={(e) => {
-                  e.preventDefault();
-                  openDelete(e);
-                }}
-              >
-                삭제
-              </div>
-            </>
-          )}
+      {!error && !isLoading && (
+        <>
+          {" "}
+          {showDelete && <Backdrop onClick={closeDelete} />}
+          <Modal className="modal" show={showDelete}>
+            <div className="modal-question-delete">
+              여행 기록을 삭제하시겠습니까?
+            </div>
+            <div className="modal-cancel">
+              <button onClick={deletetrip}>예</button>
+              <button onClick={closeDelete}>아니요</button>
+            </div>
+          </Modal>
+          <Link to={`/${props.id}/memos/1`}>
+            <li className="tripitem" style={backgroundImageStyle}>
+              {tripauth.userId === props.creatorid && (
+                <>
+                  <div
+                    className="tripitem-update nodeco"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/${props.id}/edittrip`);
+                    }}
+                  >
+                    수정
+                  </div>
+                  <div
+                    className="tripitem-delete"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openDelete(e);
+                    }}
+                  >
+                    삭제
+                  </div>
+                </>
+              )}
 
-          <div className="tripitem-nickname">{props.nickname}</div>
-          <div className="tripitem-title">{props.title}</div>
-        </li>
-      </Link>
+              <div className="tripitem-nickname">{props.nickname}</div>
+              <div className="tripitem-title">{props.title}</div>
+            </li>
+          </Link>
+        </>
+      )}
     </React.Fragment>
   );
 };

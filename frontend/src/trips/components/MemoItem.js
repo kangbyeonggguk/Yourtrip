@@ -23,7 +23,7 @@ const MemoItem = (props) => {
   //const auth = useContext(AuthContext);//context를 이용한 상태관리
   const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
 
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, error, sendRequest } = useHttpClient();
 
   const tripid = useParams().tripId;
   const day = useParams().day;
@@ -58,55 +58,67 @@ const MemoItem = (props) => {
 
       setnewtrip(true);
       window.location.reload();
-    } catch (err) {}
+    } catch (err) {
+      alert("정보 삭제에 실패하였습니다.");
+    }
   };
   return (
     <React.Fragment>
-      {showMap && <Backdrop onClick={closeMap} />}
-      <Modal className="modal" show={showMap}>
-        <div className="modal-location">{props.location}</div>
-        <div className="modal-map">
-          <Map center={props.coordinates} zoom={16} />
-        </div>
-        <div className="modal-cancel">
-          <button onClick={closeMap}>닫기</button>
-        </div>
-      </Modal>
-      {showDelete && <Backdrop onClick={closeDelete} />}
-      <Modal className="modal" show={showDelete}>
-        <div className="modal-question-delete">기록을 삭제하시겠습니까?</div>
-        <div className="modal-cancel">
-          <button onClick={memodelete}>예</button>
-          <button onClick={closeDelete}>아니요</button>
-        </div>
-      </Modal>
-      <div className="cover">
-        <div className="memo-img" style={backgroundImageStyle} />
-        <Card className={"memo-card  "}>
-          <p className="memo-location">{props.location}</p>
-          <div className="center">
-            <p className="memo-description">{props.description}</p>
-          </div>
-          <span />
-          <div className="cover2">
-            <div className="memo-location-btn center" onClick={openMap}>
-              지도에서 위치 보기
+      {!error && !isLoading && (
+        <>
+          {" "}
+          {showMap && <Backdrop onClick={closeMap} />}
+          <Modal className="modal" show={showMap}>
+            <div className="modal-location">{props.location}</div>
+            <div className="modal-map">
+              <Map center={props.coordinates} zoom={16} />
             </div>
-            {tripauth.userId === props.userid && (
-              <>
-                <div className="center">
-                  <Link className="nodeco" to={Editurl(props)}>
-                    <div className="memo-edit-btn ">수정</div>
-                  </Link>
+            <div className="modal-cancel">
+              <button onClick={closeMap}>닫기</button>
+            </div>
+          </Modal>
+          {showDelete && <Backdrop onClick={closeDelete} />}
+          <Modal className="modal" show={showDelete}>
+            <div className="modal-question-delete">
+              기록을 삭제하시겠습니까?
+            </div>
+            <div className="modal-cancel">
+              <button onClick={memodelete}>예</button>
+              <button onClick={closeDelete}>아니요</button>
+            </div>
+          </Modal>
+          <div className="cover">
+            <div className="memo-img" style={backgroundImageStyle} />
+            <Card className={"memo-card  "}>
+              <p className="memo-location">{props.location}</p>
+              <div className="center">
+                <p className="memo-description">{props.description}</p>
+              </div>
+              <span />
+              <div className="cover2">
+                <div className="memo-location-btn center" onClick={openMap}>
+                  지도에서 위치 보기
                 </div>
-                <div className="memo-delete-btn center" onClick={openDelete}>
-                  삭제
-                </div>
-              </>
-            )}
+                {tripauth.userId === props.userid && (
+                  <>
+                    <div className="center">
+                      <Link className="nodeco" to={Editurl(props)}>
+                        <div className="memo-edit-btn ">수정</div>
+                      </Link>
+                    </div>
+                    <div
+                      className="memo-delete-btn center"
+                      onClick={openDelete}
+                    >
+                      삭제
+                    </div>
+                  </>
+                )}
+              </div>
+            </Card>
           </div>
-        </Card>
-      </div>
+        </>
+      )}
     </React.Fragment>
   );
 };
