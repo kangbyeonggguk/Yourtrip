@@ -5,7 +5,7 @@ import "./Searchbar.css";
 
 const Searchbar = (props) => {
   const [inputdata, setInputdata] = useState({});
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, error, sendRequest } = useHttpClient();
 
   const SubmitHandler = async (e) => {
     e.preventDefault();
@@ -23,7 +23,9 @@ const Searchbar = (props) => {
       );
 
       props.setdata(responseData.trips);
-    } catch (err) {}
+    } catch (err) {
+      alert("데이터 전송 실패");
+    }
   };
 
   const inputchange = (e) => {
@@ -31,26 +33,30 @@ const Searchbar = (props) => {
   };
 
   return (
-    <div className="center">
-      <form onSubmit={SubmitHandler}>
-        <div className="searchbar">
-          <img
-            className="searchbar-img"
-            src="img/search.png"
-            alt="search"
-          ></img>
-          <input
-            className="searchbar-input"
-            type="text"
-            placeholder="관심가는 여행지가 있나요?"
-            onChange={inputchange}
-          />
-          <button className="searchbar-btn center" type="submit">
-            search
-          </button>
+    <React.Fragment>
+      {!error && !isLoading && (
+        <div className="center">
+          <form onSubmit={SubmitHandler}>
+            <div className="searchbar">
+              <img
+                className="searchbar-img"
+                src="img/search.png"
+                alt="search"
+              ></img>
+              <input
+                className="searchbar-input"
+                type="text"
+                placeholder="관심가는 여행지가 있나요?"
+                onChange={inputchange}
+              />
+              <button className="searchbar-btn center" type="submit">
+                search
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      )}
+    </React.Fragment>
   );
 };
 

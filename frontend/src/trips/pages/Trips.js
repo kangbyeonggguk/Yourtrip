@@ -23,7 +23,9 @@ const Trips = () => {
         );
 
         setLoadedTrips(responseData.trips);
-      } catch (err) {}
+      } catch (err) {
+        alert("정보를 찾을 수 없습니다.");
+      }
     };
     fetchTrips();
   }, [sendRequest]);
@@ -32,7 +34,7 @@ const Trips = () => {
     <React.Fragment>
       <ErrorModal error={error} onclear={clearError} />
       {isLoading && <Loadingspinner />}
-      {!isLoading && loadedTrips && (
+      {!isLoading && loadedTrips && !error && (
         <div>
           <Searchbar
             setdata={setLoadedTrips}

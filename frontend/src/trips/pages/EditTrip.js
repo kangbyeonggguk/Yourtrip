@@ -35,7 +35,9 @@ const EditTrip = () => {
           `${process.env.REACT_APP_BACKEND_URL}/trips/${tripId}`
         );
         setExistingdata(responseData);
-      } catch (err) {}
+      } catch (err) {
+        alert("정보를 가져올 수 없습니다.");
+      }
     };
     fetchTrips();
   }, [sendRequest]);
@@ -89,7 +91,9 @@ const EditTrip = () => {
       );
 
       setnewtrip(true);
-    } catch (err) {}
+    } catch (err) {
+      alert("정보를 수정할 수 없습니다.");
+    }
   };
   useEffect(() => {
     if (newtrip) {
@@ -100,7 +104,7 @@ const EditTrip = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
-      {isLoading ? (
+      {isLoading || error ? (
         <div className="center">
           <Loadingspinner asOverlay />
         </div>

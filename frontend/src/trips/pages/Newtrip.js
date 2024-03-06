@@ -64,7 +64,9 @@ const Newtrip = () => {
       );
 
       setnewtrip(true);
-    } catch (err) {}
+    } catch (err) {
+      alert("정보를 추가할 수 없습니다.");
+    }
   };
   useEffect(() => {
     if (newtrip) {
@@ -75,7 +77,7 @@ const Newtrip = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
-      {isLoading ? (
+      {isLoading || error ? (
         <div className="center">
           <Loadingspinner asOverlay />
         </div>

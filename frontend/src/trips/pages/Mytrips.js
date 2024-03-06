@@ -10,8 +10,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useSelector } from "react-redux";
 
 const Mytrips = () => {
-  const { isLoading, error, sendRequest, clearError, setIsLoading } =
-    useHttpClient();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   //const auth = useContext(AuthContext);
   const tripauth = useSelector((state) => state.auth); //리덕스를 이용한 상태관리
@@ -31,7 +30,9 @@ const Mytrips = () => {
         );
 
         setLoadedTrips(responseData.trip);
-      } catch (err) {}
+      } catch (err) {
+        alert("정보를 찾을 수 없습니다.");
+      }
     };
     fetchTrips();
   }, [sendRequest]);
@@ -40,7 +41,7 @@ const Mytrips = () => {
     <React.Fragment>
       <ErrorModal error={error} onclear={clearError} />
       {isLoading && <Loadingspinner />}
-      {!isLoading && loadedTrips && (
+      {!isLoading && loadedTrips && !error && (
         <div className="center">
           <div>
             <div className="menubox-menu">내기록</div>

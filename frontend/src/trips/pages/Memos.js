@@ -143,7 +143,9 @@ const Memos = () => {
       );
 
       setLoadedTrip(responseData.trip);
-    } catch (err) {}
+    } catch (err) {
+      alert("정보를 찾을 수 없습니다.");
+    }
   };
 
   useEffect(() => {
@@ -165,7 +167,9 @@ const Memos = () => {
       setLogin(true);
       fetchTrips();
       navigate(`/${tripid}/memos/${dayplus}`);
-    } catch (err) {}
+    } catch (err) {
+      alert("정보를 추가할 수 없습니다.");
+    }
   };
   const daydelete = async () => {
     try {
@@ -181,70 +185,75 @@ const Memos = () => {
       fetchTrips();
       closeDelete();
       navigate(`/${tripid}/memos/${day - 1}`);
-    } catch (err) {}
+    } catch (err) {
+      alert("정보를 삭제할 수 없습니다.");
+    }
   };
 
   return (
     <React.Fragment>
       <ErrorModal error={error} onclear={clearError} />
       {isLoading && <Loadingspinner />}
-      {!isLoading && loadedTrip && (
-        <div className="memo-flex">
-          {showDelete && <Backdrop onClick={closeDelete} />}
-          <Modal className="modal" show={showDelete}>
-            <div className="modal-question-delete">
-              DAY{day}부터의 기록을 삭제하시겠습니까?
-            </div>
-            <div className="modal-cancel">
-              <button onClick={daydelete}>예</button>
-              <button onClick={closeDelete}>아니요</button>
-            </div>
-          </Modal>
+      {!isLoading &&
+        loadedTrip &&
+        !error &
+        (
+          <div className="memo-flex">
+            {showDelete && <Backdrop onClick={closeDelete} />}
+            <Modal className="modal" show={showDelete}>
+              <div className="modal-question-delete">
+                DAY{day}부터의 기록을 삭제하시겠습니까?
+              </div>
+              <div className="modal-cancel">
+                <button onClick={daydelete}>예</button>
+                <button onClick={closeDelete}>아니요</button>
+              </div>
+            </Modal>
 
-          {parseInt(dayminus) > 0 && ( //페이지에 맞게 방향 모양 출력
-            <>
-              {tripauth.userId === loadedTrip.creator.id && (
-                <div className="day-delete-btn center" onClick={openDelete}>
-                  DAY 삭제
-                </div>
+            {parseInt(dayminus) > 0 && ( //페이지에 맞게 방향 모양 출력
+              <>
+                {tripauth.userId === loadedTrip.creator.id && (
+                  <div className="day-delete-btn center" onClick={openDelete}>
+                    DAY 삭제
+                  </div>
+                )}
+                <Link to={`/${tripid}/memos/${dayminus}`}>
+                  <img className="left" src="../../../../img/left.png"></img>
+                </Link>
+              </>
+            )}
+            <div className="memos">
+              {loadedTrip.memo.length != 0 && (
+                <Memolist trip={loadedTrip} day={day} />
               )}
-              <Link to={`/${tripid}/memos/${dayminus}`}>
-                <img className="left" src="../../../../img/left.png"></img>
+              {tripauth.userId === loadedTrip.creator.id && (
+                <Link to={`/${tripid}/memos/${day}/addmemo`}>
+                  <Card className={"memo-plus-btn"}>
+                    <img src="../../../../img/plus.png"></img>
+                  </Card>
+                </Link>
+              )}
+            </div>
+            {parseInt(dayplus) <= parseInt(loadedTrip.memo.length) && ( //페이지에 맞게 방향 모양 출력
+              <Link to={`/${tripid}/memos/${dayplus}`}>
+                <img
+                  className="right"
+                  src="../../../../img/right.png"
+                  alt={"기록 추가하기"}
+                ></img>
               </Link>
-            </>
-          )}
-          <div className="memos">
-            {loadedTrip.memo.length != 0 && (
-              <Memolist trip={loadedTrip} day={day} />
             )}
-            {tripauth.userId === loadedTrip.creator.id && (
-              <Link to={`/${tripid}/memos/${day}/addmemo`}>
-                <Card className={"memo-plus-btn"}>
-                  <img src="../../../../img/plus.png"></img>
-                </Card>
-              </Link>
-            )}
+            {parseInt(dayplus) > parseInt(loadedTrip.memo.length) &&
+              tripauth.userId === loadedTrip.creator.id && ( //페이지에 맞게 방향 모양 출력
+                <img
+                  className="dayplus"
+                  src="../../../../img/dayplus.png"
+                  alt={"날짜 추가하기"}
+                  onClick={plusday}
+                ></img>
+              )}
           </div>
-          {parseInt(dayplus) <= parseInt(loadedTrip.memo.length) && ( //페이지에 맞게 방향 모양 출력
-            <Link to={`/${tripid}/memos/${dayplus}`}>
-              <img
-                className="right"
-                src="../../../../img/right.png"
-                alt={"기록 추가하기"}
-              ></img>
-            </Link>
-          )}
-          {parseInt(dayplus) > parseInt(loadedTrip.memo.length) &&
-            tripauth.userId === loadedTrip.creator.id && ( //페이지에 맞게 방향 모양 출력
-              <img
-                className="dayplus"
-                src="../../../../img/dayplus.png"
-                alt={"날짜 추가하기"}
-                onClick={plusday}
-              ></img>
-            )}
-        </div>
-      )}
+        )}
     </React.Fragment>
   );
 };
